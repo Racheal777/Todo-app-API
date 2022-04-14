@@ -1,0 +1,16 @@
+# POST http://localhost:7000/savetodo
+# Content-Type: application/json
+
+
+# {
+#     "todo": "fgcrfdcrtcd"
+# }
+
+GET http://localhost:7000/gettodo/6246e0bef5ffe98d30c060f6
+# PUT  http://localhost:7000/updatetodo/6246e0bef5ffe98d30c060f6
+# Content-Type: application/json
+
+
+# {
+#     "status": "doing"
+# }
