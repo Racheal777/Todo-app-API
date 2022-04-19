@@ -26,13 +26,14 @@ const userSchema = new Schema({
     
 }, {timestamps: true}, )
 
-
+//before saving user, hash password 
 userSchema.pre('save', async function(next) {
     //generating the salt
     const salt = await bcrypt.genSalt()
 
     //adding the salt to the password
     this.password = await bcrypt.hash(this.password, salt)
+    
 
     //running the code after hashing password
     next()

@@ -1,13 +1,14 @@
 const express = require('express')
 const userController = require('../controllers/userController')
+const {saveUser, Login} = userController
 
 const router = express.Router()
 
 //saving user request
-router.post('/save', userController.saveUser)
+router.post('/save', saveUser)
 
 //login
-router.post('/login', userController.Login)
+router.post('/login', Login)
 
 
 

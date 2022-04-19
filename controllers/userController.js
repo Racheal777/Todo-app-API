@@ -35,7 +35,7 @@ const saveUser = async (req, res) => {
     console.log(user);
     
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 };
 
@@ -63,10 +63,10 @@ const Login = async (req, res) => {
         res.status(201).json(user);
         console.log(user);
       } else {
-        res.json({ password: "password incorrect" });
+        res.status(401).json({ errors: "Authentication failed" });
       }
     } else {
-      res.json({ email: "email not found" });
+      res.status(401).json({ errors: "Authentication failed" });
     }
   } catch (error) {
     console.log(error.message);

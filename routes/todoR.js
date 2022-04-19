@@ -4,19 +4,21 @@ const mongoose = require('mongoose')
 
 const todoController = require('../controllers/todo')
 
+const {saveTodo, getTodos, gettodo, deleteTodo, updateTodo} = todoController
+
 const router = express.Router()
 
 //making a post request
-router.post('/savetodo', todoController.saveTodo)
+router.post('/savetodo', saveTodo)
 
 //making a get request
-router.get('/gettodo', todoController.getTodos)
+router.get('/gettodo', getTodos)
 
-router.get('/gettodo/:id', todoController.gettodo)
+router.get('/gettodo/:id', gettodo)
 
-router.delete('/deletetodo/:id', todoController.deleteTodo)
+router.delete('/deletetodo/:id', deleteTodo)
 
-router.put('/updatetodo/:id', todoController.updateTodo)
+router.put('/updatetodo/:id', updateTodo)
 
 module.exports = router
 
