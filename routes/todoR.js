@@ -1,10 +1,8 @@
 const express = require('express')
-const mongoose = require('mongoose')
-
-
 const todoController = require('../controllers/todo')
-
 const {saveTodo, getTodos, gettodo, deleteTodo, updateTodo} = todoController
+
+const { authenticate } = require('../middlewares/auth')
 
 const router = express.Router()
 
@@ -16,9 +14,9 @@ router.get('/gettodo', getTodos)
 
 router.get('/gettodo/:id', gettodo)
 
-router.delete('/deletetodo/:id', deleteTodo)
+router.delete('/deletetodo/:id', authenticate, deleteTodo)
 
-router.put('/updatetodo/:id', updateTodo)
+router.put('/updatetodo/:id', authenticate,  updateTodo)
 
 module.exports = router
 

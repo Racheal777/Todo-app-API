@@ -22,7 +22,8 @@ app.use(cookieParser())
 app.use(cors({
     credentials: true,
     origin: "http://localhost:3000",
-    methods: ['*']
+     methods: "GET, POST, OPTIONS, PUT, DELETE",
+    // headers : ("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE"),
 }))
 
 //database connection

@@ -73,7 +73,26 @@ const Login = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  try {
+    
+    res.cookie("jwt", '', {
+      maxAge: -1,
+      
+    })
+  res.status(200).json("successfully")
+  console.log('working')
+  // console.log(token)
+
+  } catch (error) {
+    console.log(error)
+    
+  }
+  
+}
+
 module.exports = {
   saveUser,
   Login,
+  logout
 };
