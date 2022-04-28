@@ -9,9 +9,10 @@ const saveUser = async (req, res) => {
     //destructuring
     const { username, password, email } = req.body;
 
+      const hashed = bcrypt.hashSync(password, 10)
     const addUser = await new User({
       username,
-      password,
+      password : hashed,
       email,
     });
 
@@ -75,24 +76,39 @@ const Login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    
     res.cookie("jwt", '', {
-      maxAge: -1,
-      
+      maxAge: -1,   
     })
   res.status(200).json("successfully")
   console.log('working')
   // console.log(token)
+  } catch (error) {
+    console.log(error)  
+  } 
+}
+
+
+//fetching one user with his todos
+const oneUser = async (req, res) => {
+  try {
+    const id = req.params.id
+    const user = await User.findById(id).populate('todos')
+    res.json({user})
 
   } catch (error) {
     console.log(error)
-    
   }
   
 }
 
+
+
+
+
+//exporting modules/functions
 module.exports = {
   saveUser,
   Login,
-  logout
+  logout,
+  oneUser
 };

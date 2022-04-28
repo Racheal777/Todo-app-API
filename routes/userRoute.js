@@ -1,6 +1,6 @@
 const express = require('express')
 const userController = require('../controllers/userController')
-const {saveUser, Login, logout} = userController
+const { saveUser, Login, logout, oneUser } = userController
 
 const router = express.Router()
 
@@ -9,6 +9,9 @@ router.post('/save', saveUser)
 
 //login
 router.post('/login', Login)
+
+//get user
+router.get('/oneuser/:id', oneUser)
 
 //logout
 router.get('/loggingout', logout)

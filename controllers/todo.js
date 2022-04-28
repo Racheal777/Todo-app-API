@@ -2,26 +2,45 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Todo = require("../model/model");
+const User = require('../model/user')
 
 //saving a todo in the database
 const saveTodo = async (req, res) => {
-  const { todo } = req.body;
-  const data = {
-    todo,
-  };
+  try {
+    const { todo } = req.body;
+    const { id } = req.params
+    const data = {
+      todo,
+      user: id
+    };
+  
+    //destructuring the id so we dont type it
+    const newData = {...data, user:id}
 
-  const todos = await new Todo(data);
-  todos
-    .save()
-    .then((result) => {
-      if (result) {
-        res.send(todos);
-        console.log(todos);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    const newtodo = await new Todo(newData)
+
+    // console.log(data)
+    // console.log("new", newtodo)
+  
+    const oneTodo = await newtodo.save()
+    // console.log("onetodo", oneTodo)
+  
+    //fetching the user
+    const fetchUser = await User.findById(id)
+    // console.log("fetch", fetchUser);
+  
+    //pushing the todos to the user
+    fetchUser.todos.push(oneTodo)
+
+  //saving the fetch user
+    await fetchUser.save()
+
+    res.json({user: fetchUser}) 
+  } catch (error) {
+    console.log(error)
+  }
+  
+
 };
 
 //fetching your todo with the find method in mongoose
@@ -37,9 +56,10 @@ const getTodos = (req, res) => {
     });
 };
 
-
+//geting one todo 
 const gettodo = async (req, res) => {
     try {
+      // console.log(req)
         const { id } = req.params
         const todo = await Todo.findById(id)
         res.send(todo)

@@ -1,7 +1,11 @@
-DELETE  http://localhost:7070/updatetodo/6261a288f46dd1ab7c16d156
+# POST  http://localhost:7070/savetodo/626953d7a0d49980ba88dc09
 # Content-Type: application/json
 
 # {
-#     "status": "done"
+#     "todo": "go to maldives"
 # }
 
+
+GET  http://localhost:7070/gettodo/626956db9971002de30efc6f
+
+# 626953d7a0d49980ba88dc09

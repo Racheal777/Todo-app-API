@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const {Schema} = mongoose
+const { Schema } = mongoose
 
 const TodosSchema = new Schema({
     todo : {
@@ -10,6 +10,10 @@ const TodosSchema = new Schema({
     status: {
         type: String,
         default: "pending"
+    },
+    user : {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     }
 }, {timestamps: true})
 
