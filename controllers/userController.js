@@ -9,10 +9,10 @@ const saveUser = async (req, res) => {
     //destructuring
     const { username, password, email } = req.body;
 
-      const hashed = bcrypt.hashSync(password, 10)
+       
     const addUser = await new User({
       username,
-      password : hashed,
+      password : bcrypt.hashSync(password, 10),
       email,
     });
 
@@ -36,7 +36,12 @@ const saveUser = async (req, res) => {
     console.log(user);
     
   } catch (error) {
+    if(error.code === 11000){
+      res.json("Email already exist")
+    }
     console.log(error);
+   
+   
   }
 };
 

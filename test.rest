@@ -1,11 +1,13 @@
-# POST  http://localhost:7070/savetodo/626953d7a0d49980ba88dc09
-# Content-Type: application/json
+POST  http://localhost:7070/api/users/save
+Content-Type: application/json
 
-# {
-#     "todo": "go to maldives"
-# }
+{
+    "username": "Nana",
+    "email": "nana@gmail.com",
+    "password": ""
+}
 
 
-GET  http://localhost:7070/gettodo/626956db9971002de30efc6f
+# GET  http://localhost:7070/gettodo/626956db9971002de30efc6f
 
 # 626953d7a0d49980ba88dc09
