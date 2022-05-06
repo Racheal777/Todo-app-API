@@ -37,7 +37,7 @@ const saveUser = async (req, res) => {
     
   } catch (error) {
     if(error.code === 11000){
-      res.json("Email already exist")
+      res.status(409).json(error)
     }
     console.log(error);
    
