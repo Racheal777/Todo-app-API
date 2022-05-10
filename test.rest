@@ -1,13 +1,17 @@
-POST  http://localhost:7070/api/users/save
+POST http://localhost:7070/api/users/mailing
 Content-Type: application/json
 
 {
-    "username": "Nana",
-    "email": "nana@gmail.com",
-    "password": ""
+    "email": "kuranchieracheal35@gmail.com",
+    "message": "hello this is me saying you are amazing from nodemailer todo app",
+    "subject": "Amazing woman in tech"
 }
 
 
 # GET  http://localhost:7070/gettodo/626956db9971002de30efc6f
 
-# 626953d7a0d49980ba88dc09
+
+# 6279342dcb54adc6ab4c9c5e
+#6279218dfed4ae8c45898d13
+
+#'$2b$10$nWuJyvw8tf4PD27E0xNxY.GtEJ6R/otjBGGoJ7c5u.YtihK4JoE7W',

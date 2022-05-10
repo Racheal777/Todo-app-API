@@ -106,7 +106,55 @@ const oneUser = async (req, res) => {
   
 }
 
+//resetting password
+const reset = async (req, res) => {
+  try {
+    const { email, password, newpassword} = req.body
+  
+  //check for email
+  const user = await User.findOne({ email })
 
+  //if user exist compare old password
+  if(user){
+    const oldpassword = await bcrypt.compare(password, user.password)
+    console.log(oldpassword)
+
+    //if password is the same
+    if(oldpassword){
+      const id = req.params.id
+      
+      const data = {
+        
+        // password: newpassword
+        password : bcrypt.hashSync(newpassword, 10),
+    
+      }
+      const updated = await User.updateOne({_id: id}, data)
+      const users = await User.findById({_id: id})
+      //  const newdata = await User.updateOne({password: newpassword}, updated )
+
+      res.send(updated)
+      console.log(data)
+      console.log(password)
+      console.log(updated)
+      console.log(users)
+      // console.log("new", newdata)
+
+    }else{
+      res.status(401).json('Authentication failed')
+    }
+
+    
+  }else{
+    res.status(401).json('Authentication failed')
+  }
+
+  } catch (error) {
+    console.log(error)
+    
+  }
+  
+}
 
 
 
@@ -115,5 +163,6 @@ module.exports = {
   saveUser,
   Login,
   logout,
-  oneUser
+  oneUser,
+  reset
 };
