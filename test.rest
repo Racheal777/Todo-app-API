@@ -1,11 +1,9 @@
-POST http://localhost:7070/api/users/mailing
+PUT http://localhost:7070/api/users/forgotpassword/kuranchieracheal@gmail.com
 Content-Type: application/json
 
-{
-    "email": "kuranchieracheal35@gmail.com",
-    "message": "hello this is me saying you are amazing from nodemailer todo app",
-    "subject": "Amazing woman in tech"
-}
+# {
+#     "email": "sarah@gmail.com"
+# }
 
 
 # GET  http://localhost:7070/gettodo/626956db9971002de30efc6f
