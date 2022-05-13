@@ -201,6 +201,8 @@ const forgotPassword = async ( req, res ) =>{
     })
 
     //send mail body
+    //to reset user password with the url from the frontend
+    //that points to the reset password form
     let sending = {
         from: "kuranchieracheal@gmail.com",
         to: `${email}`,
