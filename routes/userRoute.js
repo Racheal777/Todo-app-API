@@ -1,6 +1,6 @@
 const express = require('express')
 const userController = require('../controllers/userController')
-const { saveUser, Login, logout, oneUser, reset, forgotPassword } = userController
+const { saveUser, Login, logout, oneUser, reset, forgotPassword, resetForgotenPassword } = userController
 const emailing = require('../email/sendmail')
 const { sendMail } = emailing
 
@@ -23,6 +23,9 @@ router.put('/reset/:id',reset )
 
 //forgoten password
 router.put('/forgotpassword/:email', forgotPassword)
+
+//reset forgoten password
+router.put('/resetpassword/:resetToken', resetForgotenPassword )
 
 //posting mail
 router.post('/mailing', sendMail)

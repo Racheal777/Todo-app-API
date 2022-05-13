@@ -102,6 +102,7 @@ const oneUser = async (req, res) => {
     const id = req.params.id
     const user = await User.findById(id).populate('todos')
     res.json({user})
+    console.log(user)
 
   } catch (error) {
     console.log(error)
@@ -127,7 +128,7 @@ const reset = async (req, res) => {
       const id = req.params.id
       
       const data = {
-        password : bcrypt.hashSync(newpassword, 10),
+        password : await bcrypt.hash(newpassword, 10),
     
       }
 
@@ -138,7 +139,7 @@ const reset = async (req, res) => {
         res.status(401).send("Cant replace new password with old")
       }
       
-      const updated = await User.updateOne({ _id: id }, data)
+      const updated = await User.updateOne({_id:id}, data)
       if(updated){
         // logout(req,res)
         res.cookie("jwt", '', {
@@ -189,6 +190,7 @@ const forgotPassword = async ( req, res ) =>{
      //updating at the same time checking if email exist
      const userUpdated = await User.findOneAndUpdate({ email }, {resetToken}, {new: true} )
      console.log(userUpdated)
+      res.send(userUpdated)
 
      if(userUpdated){
        //send mail
@@ -232,6 +234,26 @@ const forgotPassword = async ( req, res ) =>{
 }
 
 
+//password reset from email
+const resetForgotenPassword =async (req, res) => {
+
+  try {
+    //checking for token sent to the mail
+  const { resetToken } = req.params
+  const {newpassword } = req.body
+
+  const harshed = await bcrypt.hash(newpassword, 10)
+  
+  const userUpdated = await User.findOneAndUpdate({ resetToken }, {password: harshed}, {new: true} )
+     console.log(userUpdated)
+      res.status(200).send(userUpdated)
+
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
 
 
 //exporting modules/functions
@@ -241,5 +263,6 @@ module.exports = {
   logout,
   oneUser,
   reset,
-  forgotPassword
+  forgotPassword,
+  resetForgotenPassword
 };

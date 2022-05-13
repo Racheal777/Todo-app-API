@@ -1,12 +1,22 @@
-PUT http://localhost:7070/api/users/forgotpassword/kuranchieracheal@gmail.com
-Content-Type: application/json
+# PUT http://localhost:7070/api/users/reset/627d3d2f1e9aef030533d154
+# Content-Type: application/json
 
-# {
-#     "email": "sarah@gmail.com"
+# {   
+#     "email":"kuranchieracheal@gmail.com",
+#     "password":"racheal2020",
+#     "newpassword": "racheal4040"
 # }
 
 
-# GET  http://localhost:7070/gettodo/626956db9971002de30efc6f
+# POST http://localhost:7070/api/users/oneuser/627d3d2f1e9aef030533d154
+# Content-Type: application/json
+
+# {   
+#     "email":"kuranchieracheal@gmail.com",
+#     "password":"racheal3030"  
+# }
+
+GET  http://localhost:7070/api/users/oneuser/627d3d2f1e9aef030533d154
 
 
 # 6279342dcb54adc6ab4c9c5e

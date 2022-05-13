@@ -44,17 +44,17 @@ const saveTodo = async (req, res) => {
 };
 
 //fetching your todo with the find method in mongoose
-// const getTodos = (req, res) => {
-//   Todo.find()
-//     .then((result) => {
-//       if (result) {
-//         res.send(result);
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
+const getTodos = (req, res) => {
+  Todo.find()
+    .then((result) => {
+      if (result) {
+        res.send(result);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 //geting one todo 
 const gettodo = async (req, res) => {
