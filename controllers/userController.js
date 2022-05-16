@@ -226,6 +226,8 @@ const forgotPassword = async ( req, res ) =>{
 
         
     })
+     }else{
+       return res.sen('Email doesnt exist')
      }
 
   } catch (error) {
