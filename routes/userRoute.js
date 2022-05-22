@@ -1,9 +1,9 @@
 const express = require('express')
 const userController = require('../controllers/userController')
-const { saveUser, Login, logout,
+const { Login, logout,
      oneUser, reset, forgotPassword, 
      signup, resetForgotenPassword,
-    verifyEmail } = userController
+    verifyEmail, resendLink } = userController
 
 const emailing = require('../email/sendmail')
 const { sendMail } = emailing
@@ -17,6 +17,11 @@ router.post('/signup', signup)
 
 //verrifying email route
 router.get('/verify-email/:id/:token', verifyEmail)
+
+//resend link verrifying email route
+// router.get('/verify-email/:id/:token', resendLink)
+
+router.get('/resend-link', resendLink)
 
 //login
 router.post('/login', Login)
