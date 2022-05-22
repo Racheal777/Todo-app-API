@@ -31,7 +31,14 @@ const userSchema = new Schema({
 
     resetToken : {
         type: String,
-    }
+    },
+
+    verified : {
+        type: Boolean,
+        default: false
+    },
+
+    
 
     
 }, {timestamps: true}, )

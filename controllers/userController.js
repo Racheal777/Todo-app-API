@@ -3,50 +3,13 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const { v4 : uuidv4 } = require('uuid')
 const nodemailer = require('nodemailer')
+const Token = require('../model/token')
+const crypto = require('crypto')
 
 const { generateToken } = require("../helpers/userHelper");
 
 //saving the user
-const saveUser = async (req, res) => {
-  try {
-    //destructuring
-    const { username, password, email } = req.body;
 
-       
-    const addUser = await new User({
-      username,
-      password : bcrypt.hashSync(password, 10),
-      email,
-    });
-
-    const user = await addUser.save();
-
-    //if user details is correct and saves to the database
-    //generate token with the id and set cookie with the token
-    if (user) {
-      //generate token
-      const token = generateToken(user._id);
-      //use token to set cookie
-      res.cookie("jwt", token, {
-        maxAge: 2 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
-
-      console.log(token);
-      console.log("user created");
-    }
-    res.status(201).json({ user });
-    console.log(user);
-    
-  } catch (error) {
-    if(error.code === 11000){
-      res.status(409).json(error)
-    }
-    console.log(error);
-   
-   
-  }
-};
 
 const Login = async (req, res) => {
   try {
@@ -58,25 +21,40 @@ const Login = async (req, res) => {
 
     //compare password if email is found
     if (user) {
+      const checkVerified = user.verified
+      if(checkVerified){
+
+      
       const comparePassword = await bcrypt.compare(password, user.password);
       console.log(comparePassword);
 
       //if password matches generate taken and set cookie
       if (comparePassword) {
-        const token = generateToken(user._id);
-        res.cookie("jwt", token, {
-          maxAge: 2 * 24 * 60 * 60 * 1000,
-          httpOnly: true,
-        });
-
+        //then go ahead and set a cookie
+        
+          const token = generateToken(user._id);
+          res.cookie("jwt", token, {
+            maxAge: 2 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+          });
+         
+        
         res.status(201).json(user);
         console.log(user);
-      } else {
+        
+      } 
+      else {
         res.status(401).json({ errors: "Authentication failed" });
       }
-    } else {
-      res.status(401).json({ errors: "Authentication failed" });
-    }
+    
+  }else if(!user.verified){
+    return res.status(400).send({msg:'Your Email has not been verified. Please click on resend'});
+  }
+
+  }else{
+    res.status(401).json({ errors: "Authentication failed" });
+  }
+
   } catch (error) {
     console.log(error.message);
   }
@@ -230,6 +208,7 @@ const forgotPassword = async ( req, res ) =>{
        return res.sen('Email doesnt exist')
      }
 
+
   } catch (error) {
     console.log(error)
   }
@@ -256,15 +235,160 @@ const resetForgotenPassword =async (req, res) => {
   
 }
 
+const signup = async (req, res) => {
+  try {
+    //destructuring
+    const { username, password, email } = req.body;
+    const id = req.params.id
+
+       
+    const addUser = await new User({
+      username,
+      password : bcrypt.hashSync(password, 10),
+      email,
+    });
+
+    const user = await addUser.save();
+
+    //generate a token for the user if all details are correct
+    if(user){
+      let verifyToken  = await new Token({ 
+        userId : user._id,
+        token: crypto.randomBytes(16).toString('hex')
+      })
+
+      const tokenVerify = await verifyToken.save()
+      console.log('verify token', tokenVerify)
+
+      //fetching the user
+  //   const fetchUser = await User.findById({ _id: user._id})
+  //   console.log("fetch", fetchUser);
+  
+  //   //pushing the tokens to the user
+  //   // fetchUser.token.push(tokenVerify)
+  //   fetchUser.tokens.push(tokenVerify)
+
+  // //saving the fetch user
+  //   await fetchUser.save()
+
+      if(tokenVerify){
+
+        let transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: "kuranchieracheal@gmail.com",
+              pass: process.env.password
+          }
+      })
+  
+
+        let sending = {
+          from: "no-reply@example.com",
+          to: `${email}`,
+          subject: "Account Verification Link",
+          text: `Hello ${username}, Please verify your email by
+          clicking this link :
+          http://localhost:3000/verify-email/${user._id}/${verifyToken.token}`
+  
+      }
+  
+      //checking if mail is gone
+      transporter.sendMail(sending, function(error, info){
+          if(error) {
+              console.log(error)
+          }else{
+              console.log('Email sent: ' + info.response)
+  
+              return res.status(200).send("Check your email for a mail")
+          }
+  
+          
+      })
+       }else{
+         return res.sen('Email doesnt exist')
+       }
+       
+      }
+    //if user details is correct and saves to the database
+    
+    res.status(201).json({ user });
+    console.log(user);
+    
+  } catch (error) {
+    if(error.code === 11000){
+      res.status(409).json(error)
+    }
+    console.log(error);
+   
+   
+  }
+};
+
+
+//veryfying the token
+const verifyEmail = async (req, res) => {
+
+  try {
+    
+//finding the token which comes with the registeration of user wh
+  //which is attached to the email sent
+  const token = req.params.token
+  
+  const oneToken = await Token.findOne({ token : token})
+
+  // console.log(oneToken);
+  //if token doesnt exist it means it has expired
+  if(!oneToken){
+    return res.status(400).send({msg:'Your verification link may have expired. Please click on resend for verify your Email.'});
+  //if token exist find user with the token
+
+  }else{
+    const oneUser = await User.findOne({ _id: req.params.id })
+
+    if(!oneUser){
+      return res.status(401).send({msg:'We were unable to find a user for this verification. Please SignUp!'});
+    
+      //else if user is already verified, tell the user to login
+    }else if(oneUser.verified){
+      return res.status(200).send('User has been already verified. Please Login');
+     
+      //else change the verified to true
+    }else{
+      
+      const updated = await User.updateOne({ _id: oneUser._id, verified: true})
+      console.log(updated)
+      // console.log(data)
+
+      if(!updated){
+        return res.status(500).send({msg: err.message});
+        //if user is verified and saved
+      }else{
+        console.log("oneUser",oneUser)
+        return res.status(200).send('Your account has been successfully verified');
+      }
+    }
+    
+
+  }
+
+  } catch (error) {
+    console.log(error)
+    
+  }
+  
+
+}
 
 
 //exporting modules/functions
 module.exports = {
-  saveUser,
+  
+  signup,
   Login,
   logout,
   oneUser,
   reset,
   forgotPassword,
-  resetForgotenPassword
+  resetForgotenPassword,
+  verifyEmail,
 };

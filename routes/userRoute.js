@@ -1,13 +1,22 @@
 const express = require('express')
 const userController = require('../controllers/userController')
-const { saveUser, Login, logout, oneUser, reset, forgotPassword, resetForgotenPassword } = userController
+const { saveUser, Login, logout,
+     oneUser, reset, forgotPassword, 
+     signup, resetForgotenPassword,
+    verifyEmail } = userController
+
 const emailing = require('../email/sendmail')
 const { sendMail } = emailing
 
 const router = express.Router()
 
 //saving user request
-router.post('/save', saveUser)
+
+
+router.post('/signup', signup)
+
+//verrifying email route
+router.get('/verify-email/:id/:token', verifyEmail)
 
 //login
 router.post('/login', Login)
