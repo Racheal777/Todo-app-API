@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 const Token = require("../model/token");
 const crypto = require("crypto");
 
-const { generateToken } = require("../helpers/userHelper");
+const { generateToken, mailing } = require("../helpers/userHelper");
 
 //saving the user
 
@@ -239,33 +239,16 @@ const signup = async (req, res) => {
       console.log("verify token", tokenVerify);
 
       if (tokenVerify) {
-        let transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: "kuranchieracheal@gmail.com",
-            pass: process.env.password,
-          },
-        });
+        const sendMail = mailing({
+          from: process.env.email,
+          to: email,
+          subject: `Email verification`,
+          text: `Hello ${username}, Please verify your email by clicking this link :
+              http://localhost:3000/verify-email/${user._id}/${verifyToken.token}`
+        })
 
-        let sending = {
-          from: "no-reply@example.com",
-          to: `${email}`,
-          subject: "Account Verification Link",
-          text: `Hello ${username}, Please verify your email by
-          clicking this link :
-          http://localhost:3000/verify-email/${user._id}/${verifyToken.token}`,
-        };
-
-        //checking if mail is gone
-        transporter.sendMail(sending, function (error, info) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log("Email sent: " + info.response);
-
-            return res.status(200).send("Check your email for a mail");
-          }
-        });
+        console.log(sendMail)
+        
       } else {
         return res.sen("Email doesnt exist");
       }
