@@ -239,7 +239,7 @@ const signup = async (req, res) => {
       console.log("verify token", tokenVerify);
 
       if (tokenVerify) {
-        const sendMail = mailing({
+        mailing({
           from: process.env.email,
           to: email,
           subject: `Email verification`,
@@ -247,7 +247,7 @@ const signup = async (req, res) => {
               http://localhost:3000/verify-email/${user._id}/${verifyToken.token}`
         })
 
-        console.log(sendMail)
+        console.log(mailing)
         
       } else {
         return res.sen("Email doesnt exist");
